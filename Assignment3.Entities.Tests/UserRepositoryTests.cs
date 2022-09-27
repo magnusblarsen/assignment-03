@@ -92,7 +92,7 @@ public class UserRepositoryTests
     [Fact]
     public void Delete_User_in_use_returns_deleted()
     {
-        var res = _repo.Delete(3);
+        var res = _repo.Delete(3, true);
 
         Assert.Equal(Response.Deleted, res);
     }
@@ -108,5 +108,56 @@ public class UserRepositoryTests
 
         // Assert
         Assert.Equal(Response.Conflict, response);
+    }
+
+    [Fact]
+    public void Read_User_that_exists_returns_user()
+    {
+        // Arrange
+        _context.Users.Add(new User{Id = 4,Name="Melis", Email="nymail@jubii.dk"});
+        _context.SaveChanges();
+
+        // Act
+        var res = _repo.Read(4);
+
+        // Assert
+        Assert.Equal(new UserDTO(4,"Melis", "nymail@jubii.dk"), res);
+    }
+
+    [Fact]
+    public void Read_User_that_does_not_exist_returns_null()
+    {
+        var res = _repo.Read(4);
+
+        Assert.Equal(null, res);
+    }
+
+    [Theory]
+    [InlineData(1, "Tobias", "noget@andet.dk")]
+    [InlineData(2, "Magnus", "magnus@noget.dk")]
+    [InlineData(3, "Hjul", "hjul@email.com")]
+    public void ReadAll_succesful(int id, string name, string email)
+    {
+        var res = _repo.ReadAll();
+
+        Assert.Contains(res, u => u == new UserDTO(id, name,email));
+    }
+
+    [Fact]
+    public void Update_existing_user()
+    {
+        var updatedInfo = new UserUpdateDTO(1, "Tobiiii", "nymail@mail.dk");
+        var res = _repo.Update(updatedInfo);
+
+        Assert.Equal(Response.Updated, res);
+    }
+
+    [Fact]
+    public void Update_non_existing_user()
+    {
+        var updatedInfo = new UserUpdateDTO(2000, "EvilUser", "evil@mail.dk");
+        var res = _repo.Update(updatedInfo);
+
+        Assert.Equal(Response.NotFound, res);
     }
 }
