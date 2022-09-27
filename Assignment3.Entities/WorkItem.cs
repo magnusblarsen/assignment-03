@@ -1,6 +1,6 @@
 namespace Assignment3.Entities;
 
-public class Task
+public class WorkItem
 {
     [Key]
     public int Id { get; set; }

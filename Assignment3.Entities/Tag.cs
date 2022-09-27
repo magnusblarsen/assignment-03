@@ -6,5 +6,5 @@ public class Tag
 
     public string Name { get; set; }
 
-    public List<Task> Tasks { get; set; }
+    public List<WorkItem> Tasks { get; set; }
 }
