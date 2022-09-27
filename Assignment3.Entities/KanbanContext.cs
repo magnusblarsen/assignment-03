@@ -2,9 +2,14 @@ namespace Assignment3.Entities;
 
 public class KanbanContext : DbContext
 {
+    // var configuration = new ConfigurationBuilder().AddUserSecrets<Program>().Build();
+    //var connectionString = configuration.GetConnectionString("Futurama");
+
     public virtual DbSet<Task> Tasks => Set<Task>();
     public virtual DbSet<User> Users => Set<User>();
     public virtual DbSet<Tag> Tag => Set<Tag>();
+
+    public KanbanContext(DbContextOptions<KanbanContext> options) : base(options) {} 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
