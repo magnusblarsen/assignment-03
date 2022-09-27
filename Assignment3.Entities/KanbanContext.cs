@@ -16,6 +16,7 @@ public class KanbanContext : DbContext
                     .HasConversion(
                         v => v.ToString(),
                         v => (State)Enum.Parse(typeof(State), v));
+        taskEntity.Property(t => t.Description).IsRequired(false);
 
         var userEntity = modelBuilder.Entity<User>();
         userEntity.Property(u => u.Name).HasMaxLength(100).IsRequired();
