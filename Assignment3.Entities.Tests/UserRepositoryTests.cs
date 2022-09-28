@@ -1,5 +1,4 @@
 namespace Assignment3.Entities.Tests;
-using Microsoft.Data.Sqlite;
 public class UserRepositoryTests
 {
     private KanbanContext _context;

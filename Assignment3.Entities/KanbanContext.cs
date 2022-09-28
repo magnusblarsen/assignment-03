@@ -17,6 +17,7 @@ public class KanbanContext : DbContext
                         v => v.ToString(),
                         v => (State)Enum.Parse(typeof(State), v));
         taskEntity.Property(t => t.Description).IsRequired(false);
+       // taskEntity.Property(t => t.AssignedTo).IsRequired(false);
 
         var userEntity = modelBuilder.Entity<User>();
         userEntity.Property(u => u.Name).HasMaxLength(100).IsRequired();
@@ -27,6 +28,7 @@ public class KanbanContext : DbContext
         var tagEntity = modelBuilder.Entity<Tag>();
         tagEntity.Property(t => t.Name).IsRequired();
         tagEntity.HasIndex(t => t.Name).IsUnique();
+        //tagEntity.HasMany(t => t.Tasks).WithMany(task => task.Tags);
     }
     
     public KanbanContext(DbContextOptions options) :base(options){}
