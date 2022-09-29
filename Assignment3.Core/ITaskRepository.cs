@@ -8,7 +8,7 @@ public interface ITaskRepository
     IReadOnlyCollection<TaskDTO> ReadAllByTag(string tag);
     IReadOnlyCollection<TaskDTO> ReadAllByUser(int userId);
     IReadOnlyCollection<TaskDTO> ReadAllByState(State state);
-    TaskDetailsDTO Read(int taskId);
+    TaskDetailsDTO? Read(int taskId);
     Response Update(TaskUpdateDTO task);
     Response Delete(int taskId);
 }

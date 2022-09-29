@@ -56,7 +56,6 @@ public class TagRepository : ITagRepository
     public TagDTO Read(int tagId)
     {
         var entity = _context.Tags.Find(tagId);
-
         return (entity is null ? null : new TagDTO(entity.Id, entity.Name))!;
     }
 

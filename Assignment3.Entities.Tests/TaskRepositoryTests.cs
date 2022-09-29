@@ -46,6 +46,7 @@ public class TaskRepositoryTests
         {
             workItemForUserWithTask,
             new WorkItem{Id = 2, Title="Assignement03", State = State.Active, Tags = new List<Tag>(), Description = "", AssignedTo = users[0]},
+            new WorkItem{Id = 3, Title="Opvask", State = State.Closed, Tags = new List<Tag>(), Description = "", AssignedTo = users[0]}
         };
 
         context.Users.AddRange(users);
@@ -68,7 +69,7 @@ public class TaskRepositoryTests
         var (response, id) = _repo.Create(taskDTO);
 
         // Assert
-        Assert.Equal(Response.Conflict, response);
+        Assert.Equal(Response.Created, response);
     }
 
     [Fact]
@@ -77,6 +78,16 @@ public class TaskRepositoryTests
         var res = _repo.Delete(12000);
 
         Assert.Equal(Response.NotFound, res);
+    }
+
+    [Fact]
+    public void Deleting_task_with_closed_state_returns_conflict()
+    {        
+        // Act
+        var result = _repo.Delete(3);
+        
+        // Assert
+        Assert.Equal(Response.Conflict, result);
     }
 
     [Fact]
@@ -133,13 +144,28 @@ public class TaskRepositoryTests
     }
 
     [Theory]
-    [InlineData(1,"Assignement03", "Hjul", " ", State.New)]
-    [InlineData(2, "Assignement03", "Tobias", " ", State.Active)]
-    public void ReadAll_tasks(int id, string name, string assignedToName, string tags, State state)
+    [InlineData(1,"Ryd Sne", "Hjul", State.New)]
+    [InlineData(2, "Assignement03", "Tobias", State.Active)]
+    public void ReadAll_tasks(int id, string name, string assignedToName, State state)
     {
         var res = _repo.ReadAll();
-        
-        Assert.Contains(res, t => t == new TaskDTO(id, name, assignedToName, tags.Split(" "), state));
+
+        Assert.Contains(res, t => t.Id == id && t.Title == name && t.AssignedToName == assignedToName && t.State == state);
     }
+
+    [Fact]
+    public void Assigning_non_existing_user_returns_bad_request()
+    {
+        // Arrange
+        var taskDTO = new TaskCreateDTO("Bad task", 42, null, new string[]{"Tag"});
+
+        // Act
+        var (response, id) = _repo.Create(taskDTO);
+
+        // Assert
+        Assert.Equal(Response.BadRequest, response);
+    }
+
+    
 
 }
